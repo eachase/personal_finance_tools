@@ -15,7 +15,7 @@ class AccruingAccount():
     Generic account that accrues interest over time
     """
 
-    def __init__(self, value=1000, interest_rate=0.07,
+    def __init__(self, value=1000, rate=0.07,
         compound_freq='daily'):
         """
         Parameters:
@@ -32,10 +32,10 @@ class AccruingAccount():
         """
         self.init_value = value
 
-        assert interest_rate >= 0
-        if interest_rate > 1:
-            interest_rate /= 100
-        self.interest_rate = interest_rate
+        assert rate >= 0
+        if rate > 1:
+            rate /= 100
+        self.rate = rate
         
         assert compound_freq in ['daily', 'monthly', 'yearly']
         self.compound_freq = compound_freq
@@ -52,8 +52,19 @@ class AccruingAccount():
         """
         #FIXME: make time an object
         return self.init_value * (
-            1 + self.interest_rate/self.accruals_per_year) ** (
+            1 + self.rate/self.accruals_per_year) ** (
             self.accruals_per_year * time)
 
 
+class Income(AccruingAccount):
 
+    def __init__(self, value=1000, rate=0.05):
+        """
+        Model annual income over the years
+
+        rate: float
+            Average annual income increase
+        """
+        super().__init__(value=value, rate=rate,
+            compound_freq='yearly')
+    
